@@ -1,2 +1,2 @@
-# Mapping_Earthquales
+# Mapping_Earthquakes
 Project for mapping earthquakes globally
