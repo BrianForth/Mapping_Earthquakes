@@ -13,19 +13,26 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
     maxZoom: 18,
     accessToken: API_KEY
 });
-// Craete base layer to hold both maps
-let baseMaps = {
-    "Streets": streets,
-    "Satellite Streets": satelliteStreets
-};
 // Create map object with center, zoom, and default layer
 let map = L.map('mapid',{
     center: [39.5, -98.5],
     zoom: 3,
     layers: [streets]
 });
+// Create base layer to hold both maps
+let baseMaps = {
+    "Streets": streets,
+    "Satellite Streets": satelliteStreets
+};
+// Create earthquake layer for map
+let earthquakes = new L.layerGroup();
+
+// Definte object containing overlays
+let overlays = {
+    "Earthquakes": earthquakes
+};
 // Pass map layers into layers control and add control to map
-L.control.layers(baseMaps).addTo(map);
+L.control.layers(baseMaps, overlays).addTo(map);
 
 // Grabbing GeoJSON data
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data){
@@ -83,6 +90,8 @@ function getColor(magnitude) {
         onEachFeature: function(feature, layer){
             layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
         }
-    }).addTo(map);
+    }).addTo(earthquakes);
 });
 
+// Add earthquakes to map
+earthquakes.addTo(map);
